@@ -89,4 +89,18 @@ public class TodoServiceTest {
         Exception exception = assertThrows(TodoNotFoundException.class, executable);
         assertEquals(todoId + " not found", exception.getMessage());
     }
+
+    @Test
+    public void should_throw_exception_when_delete_given_wrong_id() {
+        //given
+        Todo todo = new Todo(1, true);
+        when(todoRepository.findById(todo.getId())).thenReturn(Optional.empty());
+        TodoService todoService = new TodoService(todoRepository);
+        Integer todoId = todo.getId();
+        //when
+        Executable executable = () -> todoService.deleteById(todoId);
+        //then
+        Exception exception = assertThrows(TodoNotFoundException.class, executable);
+        assertEquals(todoId + " not found", exception.getMessage());
+    }
 }

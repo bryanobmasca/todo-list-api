@@ -31,4 +31,8 @@ public class TodoService {
         }
         return null;
     }
+
+    public void deleteById(Integer id) {
+        todoRepository.deleteById(id);
+    }
 }

@@ -10,15 +10,13 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class TodoServiceTest {
     private TodoRepository todoRepository;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         todoRepository = Mockito.mock(TodoRepository.class);
     }
 
@@ -49,8 +47,8 @@ public class TodoServiceTest {
     @Test
     public void should_update_done_state_when_update_given_done_is_false() {
         //given
-        Todo todo = new Todo(1,"To update done state");
-        Todo updatedTodo = new Todo(1,true);
+        Todo todo = new Todo(1, "To update done state");
+        Todo updatedTodo = new Todo(1, true);
         when(todoRepository.findById(todo.getId())).thenReturn(java.util.Optional.of(todo));
         when(todoRepository.save(updatedTodo)).thenReturn(updatedTodo);
         TodoService todoService = new TodoService(todoRepository);
@@ -59,5 +57,18 @@ public class TodoServiceTest {
         //then
         assertEquals(true, actual.isDone());
         assertEquals("To update done state", actual.getText());
+    }
+
+    @Test
+    public void should_delete_todo_when_delete_given_todo_id() {
+        //given
+        Todo todo = new Todo(1, "Delete this todo.");
+        Integer todoId = todo.getId();
+        when(todoRepository.findById(todoId)).thenReturn(java.util.Optional.of(todo));
+        TodoService todoService = new TodoService(todoRepository);
+        //when
+        todoService.deleteById(todoId);
+        // then
+        Mockito.verify(todoRepository, Mockito.times(1)).deleteById(todoId);
     }
 }

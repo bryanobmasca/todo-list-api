@@ -91,4 +91,22 @@ public class TodoServiceIntegration {
                 .andExpect(status().isOk());
         assertFalse(todoRepository.findById(todoId).isPresent());
     }
+
+    @Test
+    public void should_return_id_not_found_when_update_given_wrong_id() throws Exception {
+        //given
+        Todo todo = new Todo(1, "Update the done state");
+        Integer wrongId = 2;
+
+        String stringAsJson = "{\n" +
+                "    \"done\" : true\n" +
+                "}";
+        //when then
+        mockMvc.perform(put("/todolist/" + wrongId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(stringAsJson))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(wrongId + " not found"))
+                .andExpect(jsonPath("$.status").value("404 NOT_FOUND"));
+    }
 }

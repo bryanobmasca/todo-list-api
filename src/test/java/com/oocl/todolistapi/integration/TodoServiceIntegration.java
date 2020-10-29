@@ -80,4 +80,15 @@ public class TodoServiceIntegration {
                 .andExpect(jsonPath("$.text").value(todoText))
                 .andExpect(jsonPath("$.done").value(true));
     }
+
+    @Test
+    public void should_delete_todo_when_delete_given_todo_id() throws Exception {
+        //given
+        Todo todo = new Todo("Update the done state");
+        Integer todoId = todoRepository.save(todo).getId();
+        //when then
+        mockMvc.perform(delete("/todolist/" + todoId))
+                .andExpect(status().isOk());
+        assertFalse(todoRepository.findById(todoId).isPresent());
+    }
 }

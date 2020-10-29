@@ -1,11 +1,16 @@
 package com.oocl.todolistapi.contoller;
 
+import com.oocl.todolistapi.dto.TodoRequest;
 import com.oocl.todolistapi.dto.TodoResponse;
 import com.oocl.todolistapi.mapper.TodoMapper;
 import com.oocl.todolistapi.model.Todo;
 import com.oocl.todolistapi.service.TodoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,5 +32,12 @@ public class TodoListController {
         return todoService.findAll().stream()
                 .map(todoMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TodoResponse save(@RequestBody TodoRequest todoRequest){
+        Todo todo = todoService.save(todoMapper.toEntity(todoRequest));
+        return todoMapper.toResponse(todo);
     }
 }

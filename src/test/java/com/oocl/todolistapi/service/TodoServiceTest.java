@@ -24,4 +24,17 @@ public class TodoServiceTest {
         //then
         assertEquals(todoList.size(), actual.size());
     }
+
+    @Test
+    public void should_return_todo_when_save_given_one_todo() {
+        //given
+        TodoRepository todoRepository = Mockito.mock(TodoRepository.class);
+        Todo todo = new Todo("Create one todo.");
+        when(todoRepository.save(todo)).thenReturn(todo);
+        TodoService todoService = new TodoService(todoRepository);
+        //when
+        Todo actual = todoService.save(todo);
+        //then
+        assertEquals(todo, actual);
+    }
 }

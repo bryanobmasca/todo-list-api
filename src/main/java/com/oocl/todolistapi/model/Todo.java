@@ -13,14 +13,13 @@ public class Todo {
     private String text;
     private boolean done;
 
-    public Todo(Integer id, String text, boolean done) {
-        this.id = id;
-        this.text = text;
-        this.done = done;
-    }
-
     public Todo() {
 
+    }
+
+    public Todo(String text) {
+        this.text = text;
+        this.done = false;
     }
 
     public Integer getId() {

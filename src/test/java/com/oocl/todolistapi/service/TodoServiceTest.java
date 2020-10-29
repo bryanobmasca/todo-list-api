@@ -1,15 +1,19 @@
 package com.oocl.todolistapi.service;
 
+import com.oocl.todolistapi.exception.TodoNotFoundException;
 import com.oocl.todolistapi.model.Todo;
 import com.oocl.todolistapi.repository.TodoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 public class TodoServiceTest {
@@ -70,5 +74,19 @@ public class TodoServiceTest {
         todoService.deleteById(todoId);
         // then
         Mockito.verify(todoRepository, Mockito.times(1)).deleteById(todoId);
+    }
+
+    @Test
+    public void should_throw_exception_when_update_given_wrong_id() {
+        //given
+        Todo todo = new Todo(1, true);
+        when(todoRepository.findById(todo.getId())).thenReturn(Optional.empty());
+        TodoService todoService = new TodoService(todoRepository);
+        Integer todoId = todo.getId();
+        //when
+        Executable executable = () -> todoService.update(todoId, todo);
+        //then
+        Exception exception = assertThrows(TodoNotFoundException.class, executable);
+        assertEquals(todoId + " not found", exception.getMessage());
     }
 }

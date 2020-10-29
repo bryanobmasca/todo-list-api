@@ -38,7 +38,7 @@ public class TodoServiceIntegration {
         Todo todo = new Todo("New todo");
         Todo savedTodo = todoRepository.save(todo);
         //when then
-        mockMvc.perform(get("/todolist"))
+        mockMvc.perform(get("/todos"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(savedTodo.getId()))
                 .andExpect(jsonPath("$[0].text").value(savedTodo.getText()))
@@ -52,7 +52,7 @@ public class TodoServiceIntegration {
                 "    \"text\" : \"Add this todo.\"\n" +
                 "}";
         //when then
-        mockMvc.perform(post("/todolist")
+        mockMvc.perform(post("/todos")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(stringAsJson))
                 .andExpect(status().isCreated())
@@ -72,7 +72,7 @@ public class TodoServiceIntegration {
                 "    \"done\" : true\n" +
                 "}";
         //when then
-        mockMvc.perform(put("/todolist/" + todoId)
+        mockMvc.perform(put("/todos/" + todoId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(stringAsJson))
                 .andExpect(status().isOk())
@@ -87,7 +87,7 @@ public class TodoServiceIntegration {
         Todo todo = new Todo("Update the done state");
         Integer todoId = todoRepository.save(todo).getId();
         //when then
-        mockMvc.perform(delete("/todolist/" + todoId))
+        mockMvc.perform(delete("/todos/" + todoId))
                 .andExpect(status().isOk());
         assertFalse(todoRepository.findById(todoId).isPresent());
     }
@@ -102,7 +102,7 @@ public class TodoServiceIntegration {
                 "    \"done\" : true\n" +
                 "}";
         //when then
-        mockMvc.perform(put("/todolist/" + wrongId)
+        mockMvc.perform(put("/todos/" + wrongId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(stringAsJson))
                 .andExpect(status().isNotFound())
@@ -120,7 +120,7 @@ public class TodoServiceIntegration {
                 "    \"done\" : true\n" +
                 "}";
         //when then
-        mockMvc.perform(delete("/todolist/" + wrongId)
+        mockMvc.perform(delete("/todos/" + wrongId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(stringAsJson))
                 .andExpect(status().isNotFound())

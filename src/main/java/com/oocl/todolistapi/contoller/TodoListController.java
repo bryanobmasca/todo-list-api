@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/todolist")
+@RequestMapping("/todos")
 public class TodoListController {
     private TodoService todoService;
     private TodoMapper todoMapper;

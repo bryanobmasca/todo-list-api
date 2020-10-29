@@ -22,6 +22,16 @@ public class Todo {
         this.done = false;
     }
 
+    public Todo(int id, String text) {
+        this.id = id;
+        this.text = text;
+    }
+
+    public Todo(int id, boolean done) {
+        this.id = id;
+        this.done = done;
+    }
+
     public Integer getId() {
         return id;
     }

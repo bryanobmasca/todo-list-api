@@ -9,8 +9,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -24,7 +28,7 @@ public class TodoServiceIntegration {
     private MockMvc mockMvc;
 
     @AfterEach
-    void tearDown(){
+    void tearDown() {
         todoRepository.deleteAll();
     }
 
@@ -55,5 +59,25 @@ public class TodoServiceIntegration {
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.text").value("Add this todo."))
                 .andExpect(jsonPath("$.done").value(false));
+    }
+
+    @Test
+    public void should_update_done_state_when_update_given_todo_id() throws Exception {
+        //given
+        Todo todo = new Todo("Update the done state");
+        Integer todoId = todoRepository.save(todo).getId();
+        String todoText = todoRepository.save(todo).getText();
+
+        String stringAsJson = "{\n" +
+                "    \"done\" : true\n" +
+                "}";
+        //when then
+        mockMvc.perform(put("/todolist/" + todoId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(stringAsJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(todoId))
+                .andExpect(jsonPath("$.text").value(todoText))
+                .andExpect(jsonPath("$.done").value(true));
     }
 }
